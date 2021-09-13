@@ -277,3 +277,5 @@ export class LibHN {
     }
   }
 }
+
+export * from './interfaces'
