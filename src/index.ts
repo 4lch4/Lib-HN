@@ -1,16 +1,11 @@
 import Axios, { AxiosInstance } from 'axios'
 import { APIResponse, HNItem, HNUpdate } from './interfaces'
 
-// const DefaultConfig: Config = {
-//   baseUrl: 'https://hacker-news.firebaseio.com/v0',
-//   version: 'v0'
-// }
-
 export class LibHN {
   private client: AxiosInstance
   // private baseUrl: string
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string = 'https://hacker-news.firebaseio.com/v0') {
     this.client = Axios.create({
       baseURL: baseUrl
     })
@@ -43,10 +38,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, code, headers, statusText } = await this.getTopStoryIds()
+      const res = await this.getTopStoryIds()
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -55,9 +50,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: code,
-        headers: headers,
-        statusText: statusText
+        code: res.code,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -75,12 +70,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/newstories.json`
-      )
+      const res = await this.client.get(`/newstories.json`)
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -89,9 +82,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -109,12 +102,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/beststories.json`
-      )
+      const res = await this.client.get(`/beststories.json`)
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -123,9 +114,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -143,12 +134,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/askstories.json`
-      )
+      const res = await this.client.get(`/askstories.json`)
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -157,9 +146,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -177,12 +166,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/showstories.json`
-      )
+      const res = await this.client.get(`/showstories.json`)
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -191,9 +178,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -211,12 +198,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/jobstories.json`
-      )
+      const res = await this.client.get(`/jobstories.json`)
       const items: HNItem[] = []
 
-      for (const id of data) {
+      for (const id of res.data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -225,9 +210,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -242,15 +227,13 @@ export class LibHN {
    */
   public async getItem(id: number): Promise<APIResponse<HNItem>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/item/${id}.json`
-      )
+      const res = await this.client.get(`/item/${id}.json`)
 
       return {
-        data,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        data: res.data,
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
@@ -262,15 +245,13 @@ export class LibHN {
    */
   public async getUpdates(): Promise<APIResponse<HNUpdate>> {
     try {
-      const { data, status, headers, statusText } = await this.client.get(
-        `/updates`
-      )
+      const res = await this.client.get(`/updates`)
 
       return {
-        data,
-        code: status,
-        headers: headers,
-        statusText: statusText
+        data: res.data,
+        code: res.status,
+        headers: res.headers,
+        statusText: res.statusText
       }
     } catch (err) {
       throw err
