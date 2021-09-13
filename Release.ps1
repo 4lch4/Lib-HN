@@ -27,3 +27,5 @@ npm version $VersionBump
 git add .
 
 git commit -m 'chore: version bumped'
+
+git tag -a v$(npm view . version) -m 'Release'
