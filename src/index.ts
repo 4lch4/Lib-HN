@@ -1,25 +1,25 @@
 import Axios, { AxiosInstance } from 'axios'
-import { APIResponse, Config, HNItem, HNUpdate } from './interfaces'
+import { APIResponse, HNItem, HNUpdate } from './interfaces'
 
-const DefaultConfig: Config = {
-  baseUrl: 'https://hacker-news.firebaseio.com/v0',
-  version: 'v0'
-}
+// const DefaultConfig: Config = {
+//   baseUrl: 'https://hacker-news.firebaseio.com/v0',
+//   version: 'v0'
+// }
 
 export class LibHN {
   private client: AxiosInstance
-  private config: Config
+  // private baseUrl: string
 
-  constructor(config: Config = DefaultConfig) {
-    this.client = Axios.create()
-    this.config = config
+  constructor(baseUrl: string) {
+    this.client = Axios.create({
+      baseURL: baseUrl
+    })
+    // this.config = config
   }
 
   public async getTopStoryIds(): Promise<APIResponse<number[]>> {
     try {
-      const res = await this.client.get(
-        `${this.config.baseUrl}/topstories.json`
-      )
+      const res = await this.client.get('/topstories.json')
 
       return {
         data: res.data,
@@ -43,12 +43,10 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
+      const { data, code, headers, statusText } = await this.getTopStoryIds()
       const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/topstories.json`
-      )
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -57,9 +55,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: code,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -77,12 +75,12 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/newstories.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/newstories.json`
       )
+      const items: HNItem[] = []
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -91,9 +89,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -111,12 +109,12 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/beststories.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/beststories.json`
       )
+      const items: HNItem[] = []
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -125,9 +123,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -145,12 +143,12 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/askstories.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/askstories.json`
       )
+      const items: HNItem[] = []
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -159,9 +157,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -179,12 +177,12 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/showstories.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/showstories.json`
       )
+      const items: HNItem[] = []
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -193,9 +191,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -213,12 +211,12 @@ export class LibHN {
     count: number = 10
   ): Promise<APIResponse<HNItem[]>> {
     try {
-      const items: HNItem[] = []
-      const res = await this.client.get(
-        `${this.config.baseUrl}/jobstories.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/jobstories.json`
       )
+      const items: HNItem[] = []
 
-      for (const id of res.data) {
+      for (const id of data) {
         if (items.length < count) {
           const item = await this.getItem(id)
           items.push(item.data)
@@ -227,9 +225,9 @@ export class LibHN {
 
       return {
         data: items,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -244,15 +242,15 @@ export class LibHN {
    */
   public async getItem(id: number): Promise<APIResponse<HNItem>> {
     try {
-      const res = await this.client.get(
-        `${this.config.baseUrl}/item/${id}.json`
+      const { data, status, headers, statusText } = await this.client.get(
+        `/item/${id}.json`
       )
 
       return {
-        data: res.data,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        data,
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
@@ -264,37 +262,18 @@ export class LibHN {
    */
   public async getUpdates(): Promise<APIResponse<HNUpdate>> {
     try {
-      const res = await this.client.get(`${this.config.baseUrl}/updates`)
+      const { data, status, headers, statusText } = await this.client.get(
+        `/updates`
+      )
 
       return {
-        data: res.data,
-        code: res.status,
-        headers: res.headers,
-        statusText: res.statusText
+        data,
+        code: status,
+        headers: headers,
+        statusText: statusText
       }
     } catch (err) {
       throw err
     }
   }
 }
-
-const tmpClass = new LibHN()
-
-tmpClass
-  .getUpdates()
-  .then(res => {
-    console.log('Res received...')
-
-    console.log(`res.data.items.length = ${res.data.items.length} `)
-    console.log(res.data)
-    // const story = res.data[0]
-    // if (story.time) {
-    //   const tmpDate = new Date(story.time * 1000)
-    //   // console.log(new Date())
-    //   console.log(`tmpDate = ${tmpDate.toString()}`)
-    // }
-    // console.log(story)
-
-    console.log('Done!')
-  })
-  .catch(err => console.log(err))
